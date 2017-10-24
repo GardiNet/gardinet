@@ -1,0 +1,83 @@
+#---------------------------------------------------------------------------
+# Author: Cedric Adjih, Hana Baccouch
+# Copyright 2013-2015 Inria
+# All rights reserved. Distributed only with permission.
+#---------------------------------------------------------------------------
+
+WITH_RECODE=1
+
+PYTHON=python
+CFLAGS += -Wall -g3 -fPIC
+
+#------------------------------
+
+SRCS =  general.c linear-code.c coded-packet.c packet-set.c
+
+HEADERS = $(SRCS:.c=.h)
+
+OBJS = $(SRCS:.c=.o)
+
+#------------------------------
+
+#---------------------------------------------------------------------------
+# Main targets
+#---------------------------------------------------------------------------
+
+all: swig-all
+
+swig-all: libsew.a _libsewmodule.so test-coded-packet
+
+#---------------------------------------------------------------------------
+# Dependencies
+# http://stackoverflow.com/questions/97338/gcc-dependency-generation-for-a-different-output-directory
+#---------------------------------------------------------------------------
+
+DEPS = $(SRCS:.c=.d)
+
+-include $(DEPS)
+
+%.d : %.c %.h
+	$(CC) $(CCFLAGS) -MF"$@" -MG -MM -MP -MT"$@" -MT"$(<:.c=.o)" "$<"
+
+#---------------------------------------------------------------------------
+# Library
+#---------------------------------------------------------------------------
+
+libsew.a: ${OBJS}
+	${AR} cru $@ ${OBJS}
+
+#--------------------------------------------------------------------------
+# SWIG wrapper
+#---------------------------------------------------------------------------
+
+_libsewmodule.so: libsewmodule.c setup.py ${SRCS} ${OBJS}
+	rm -rf build
+	${PYTHON} setup.py build #|| python setup.py build
+	ln -sf build/lib*/libsewmodule.so $@ || true
+
+libsewmodule.c: libsew.i Makefile ${SRCS} ${HEADERS}
+	swig -python -o $@ libsew.i
+
+#---------------------------------------------------------------------------
+# Testing
+#---------------------------------------------------------------------------
+
+unittest: all
+	python testLibSEW.py
+
+test-coded-packet: test-coded-packet.o libsew.a
+	${CC} ${CFLAGS} -o $@ $< -lsew -L.
+
+#---------------------------------------------------------------------------
+# Cleaning
+#---------------------------------------------------------------------------
+
+clean:
+	rm -f *.a *.so *.o *.d *~ *.pyc 
+	rm -f libsewmodule.c libsewmodule.py
+	rm -f test-coded-packet
+
+really-clean: clean
+	rm -rf build table-*.pydat table-*gf*.c 
+
+#---------------------------------------------------------------------------
