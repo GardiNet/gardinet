@@ -1,0 +1,15 @@
+#---------------------------------------------------------------------------
+# Automated file generation
+#---------------------------------------------------------------------------
+
+table-gf%.pydat: computeGaloisFieldTable.py
+        sage computeGaloisFieldTable.py $*
+
+table-explog-gf%.c table-mul-gf%.c: writeGaloisFieldTable.py table-gf%.pydat
+        python writeGaloisFieldTable.py $*
+
+all-tables: \
+   table-explog-gf256.c table-explog-gf16.c table-explog-gf4.c \
+   table-mul-gf256.c table-mul-gf16.c table-mul-gf4.c
+
+#---------------------------------------------------------------------------
