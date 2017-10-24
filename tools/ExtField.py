@@ -1,11 +1,16 @@
+#! /usr/bin/env python
 #---------------------------------------------------------------------------
 # Galois Extension Fields
 # (simple operations; for more, use "Sage" (sagemath.org) for instance)
 #
-# Cedric Adjih - Inria - 2015
+# Cedric Adjih - Inria - 2015-2017
 #---------------------------------------------------------------------------
 
-import urllib2
+from __future__ import print_function, division
+
+try: from urllib.request import urlopen # Python 3
+except: from urllib2 import urlopen     # Python 2
+
 import zlib, re, os, gzip
 import numpy as np
 
@@ -17,13 +22,13 @@ ConwayPolyTextCache = "cache-conway-poly.txt.gz"
 def getConwayPolyTable():
     if not os.path.exists(ConwayPolyTextCache):
         print ("+ retrieving: %s" % ConwayPolyUrl)
-        conwayStrGz = urllib2.urlopen(ConwayPolyUrl).read()
+        conwayStrGz = urlopen(ConwayPolyUrl).read()
         with open(ConwayPolyTextCache, "wb") as f:
             f.write(conwayStrGz)
     
-    with open(ConwayPolyTextCache) as f:
+    with open(ConwayPolyTextCache, "rb") as f:
         conwayStrGz = f.read()
-    conwayStr = (zlib.decompress(conwayStrGz, 15+32)
+    conwayStr = (zlib.decompress(conwayStrGz, 15+32).decode("utf-8")
                  .replace("allConwayPolynomials := ", "")
                  .replace("0];", "]"))
     m = re.match(r"\A([[\]\n, 0-9]+)\Z", conwayStr)
@@ -32,14 +37,50 @@ def getConwayPolyTable():
     conwayPolyTable = { (p,n): poly  for p,n, poly in conwayPolyList }
     return conwayPolyTable
 
+#--------------------------------------------------
+
+# Note: both BasicConwayPolyTable and _cacheConwayPolyTable are stored
+# with lowest coefficient first, e.g [a_0, a_1, ... ]
+
+BasicConwayPolyTable = {
+    (2, 1): [1, 1],
+    (2, 2): [1, 1, 1],
+    (2, 4): [1, 1, 0, 0, 1],
+    (2, 8): [1, 0, 1, 1, 1, 0, 0, 0, 1],
+    (2, 16): [1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    (2, 32): [1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+}
+
+_cacheConwayPolyTable = None
+
+def getConwayPoly(p,n):
+    global _cacheConwayPolyTable
+    if (p,n) in BasicConwayPolyTable:
+        result = BasicConwayPolyTable[(p,n)]
+    else:
+        if _cacheConwayPolyTable == None:
+            _cacheConwayPolyTable = getConwayPolyTable()
+            for (_p,_n),poly in BasicConwayPolyTable.items():
+                assert _cacheConwayPolyTable[(_p,_n)] == poly
+
+        if (p,n) not in _cacheConwayPolyTable:
+            raise ValueError(
+                "No conway polynomial in the database for p**n", (p,n))
+        result = _cacheConwayPolyTable[(p,n)]
+
+    return list(reversed(result))
+
 #---------------------------------------------------------------------------
 
+# GF(p^n)
 class ExtField:
-    conwayPolyTable = getConwayPolyTable()
-
-    # GF(p^n)
+    """A basic implementation of the finite field GF(p^n) through
+    its isomorphic representation GF(p)[X] / (f(X)) where f(X) is
+    the Conway polynomial f_p,n(X) for GF(p^n)"""
+    
     def __init__(self, p, n):
-        self.poly = np.array(list(reversed(self.conwayPolyTable[(p,n)])))
+        self.poly = np.array(getConwayPoly(p,n))
         self.p = p
         self.n = n
 
@@ -86,10 +127,10 @@ class ExtField:
             yield self.fromInt(i)
 
 
-def gfMul(x,y):
+def gfMul(gf,x,y):
     return gf.asInt(gf.mul(gf.fromInt(x), gf.fromInt(y)))
 
-def gfAdd(x,y):
+def gfAdd(gf,x,y):
     return gf.asInt(gf.add(gf.fromInt(x), gf.fromInt(y)))
 
 #---------------------------------------------------------------------------
@@ -97,20 +138,12 @@ def gfAdd(x,y):
 def test():
     gf = ExtField(3,2)
 
-    gf.add([1,2,3], [2,3,4])
-    #gf.poly
-    u = gf.adjust([1,2,3,4,5,1,4])
-    u, gf.asInt(u), gf.fromInt(0)
-    #u
-    gf.mul(gf.fromInt(0), gf.fromInt(3))
-    len(gf)
-
     def dumpTable():
         for i in gf.iterElem():
-            print i,
+            print(i, end=" ")
             for j in gf.iterElem():
-                print gf.asInt(gf.mul(i, j)),
-            print
+                print(gf.asInt(gf.mul(i, j)), end=" ")
+            print()
 
     dumpTable()
     
