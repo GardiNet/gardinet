@@ -2,14 +2,18 @@
 # Automated file generation
 #---------------------------------------------------------------------------
 
-table-gf%.pydat: computeGaloisFieldTable.py
-        sage computeGaloisFieldTable.py $*
-
-table-explog-gf%.c table-mul-gf%.c: writeGaloisFieldTable.py table-gf%.pydat
-        python writeGaloisFieldTable.py $*
+LOG2_256=8
+LOG2_16=4
+LOG2_4=2
 
 all-tables: \
    table-explog-gf256.c table-explog-gf16.c table-explog-gf4.c \
    table-mul-gf256.c table-mul-gf16.c table-mul-gf4.c
+
+table-gf%.json: computeGaloisFieldTable.py
+	python3 computeGaloisFieldTable.py $(LOG2_$*)
+
+table-explog-gf%.c table-mul-gf%.c: writeGaloisFieldTable.py table-gf%.json
+	python3 writeGaloisFieldTable.py $(LOG2_$*)
 
 #---------------------------------------------------------------------------

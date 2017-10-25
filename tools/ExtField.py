@@ -94,7 +94,9 @@ class ExtField:
         return self.adjust(np.polymul(u1, u2))
        
     def div(self, u1, u2):
-        return self.adjust(np.polydiv(u1,u2))
+        # need to implement Euclidean algorithm for inversion first
+        #return self.adjust(np.polydiv(u1, u2))
+        raise NotImplementedError("XXX: this is not implemented")
         
     def adjust(self, u):
         assert self.poly[0] == 1
@@ -104,11 +106,19 @@ class ExtField:
         if len(result) == 0:
             result = np.array([0])
         return result
+
+    def asTuple(self, u):
+        return tuple(self.adjust(u))
+
+    def fromTuple(self, v):
+        return self.adjust(np.array(v))
     
     def asInt(self, u):
-        return np.polyval(self.adjust(u), self.p)
+        return int(np.polyval(self.adjust(u), self.p))
     
     def fromInt(self, v):
+        # fromInt(0) returns [0] -> note this is neutral element for add. "0"
+        # fromInt(1) returns [1] -> note this is neutral element for mult. "1"
         result = []
         i = 0
         while v > 0:
@@ -116,7 +126,7 @@ class ExtField:
             v = v // self.p
             result.append(coef)
         if len(result) == 0:
-            result.append(0)
+            result.append(0) 
         return np.array(list(reversed(result)))
     
     def __len__(self):
@@ -126,6 +136,10 @@ class ExtField:
         for i in range(len(self)):
             yield self.fromInt(i)
 
+    def isEqual(self, u1, u2):
+        assert isinstance(u1, np.ndarray)
+        assert isinstance(u2, np.ndarray)
+        return tuple(u1) == tuple(u2)
 
 def gfMul(gf,x,y):
     return gf.asInt(gf.mul(gf.fromInt(x), gf.fromInt(y)))

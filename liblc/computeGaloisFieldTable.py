@@ -1,50 +1,73 @@
-#--------------------------------------------------------------*- python -*-
+#---------------------------------------------------------------------------
 # Generate tables for a field of a given order
 #---------------------------------------------------------------------------
 # Author: Cedric Adjih
-# Copyright 2013 Inria
+# Copyright 2013-2017 Inria
 # All rights reserved. Distributed only with permission.
 #---------------------------------------------------------------------------
 
-from sage import *   # import sage library
-from sage.all_cmdline import * 
+import json
 import sys
+sys.path.append("../tools")
+
+import ExtField
+
+#--------------------------------------------------
 
 if len(sys.argv) < 2:
-    sys.stderr.write("Syntax: sage %s <field order>\n" % sys.argv[0])
+    sys.stderr.write("Syntax: %s <log2 field order>\n" % sys.argv[0])
     sys.exit(1)
 
-FieldOrder = int(sys.argv[1])
+LogFieldOrder = int(sys.argv[1])
+FieldOrder = 2**LogFieldOrder
 
-K = GF(FieldOrder, repr='int', names=('a',))
-elemList = [x for x in K]
+K = ExtField.ExtField(2, LogFieldOrder)
+elemList = [K.fromInt(i) for i in range(len(K))]
 
-mulTable = {}
-sumTable = {}
+toIntTable = { K.asTuple(x):i for (i,x) in enumerate(elemList) }
+
+#--------------------------------------------------
+
+mulTable = []
+sumTable =[]
+invActualTable = {}
+for ix,x in enumerate(elemList):
+    sys.stdout.write(".")
+    sys.stdout.flush()
+    for iy,y in enumerate(elemList):
+        prodxy = toIntTable[K.asTuple(K.mul(x,y))]
+        sumxy = toIntTable[K.asTuple(K.add(x,y))]
+        mulTable.append((ix,iy,prodxy))
+        sumTable.append((ix,iy,sumxy))
+        if prodxy == 1:
+            invActualTable[ix] = iy
+            invActualTable[iy] = ix
+
+invTable = [ (x,y) for x,y in invActualTable.items() ]
+
+_0 = K.fromInt(0)
+_1 = K.fromInt(1)
+
+negTable = []
 for x in elemList:
-    for y in elemList:
-        mulTable[(x,y)] = x*y
-	sumTable[(x,y)] = x+y
+    _x = K.asInt(x)
+    negTable.append([_x,K.asInt(K.sub(_0, x))])
 
-invTable = {}
-negTable = {}
-for x in elemList:
-    if x != 0:
-        invTable[x] = 1/x
-    negTable[x] = 0-x
-
-assert elemList[0] == 0
-
-expTable = {}
-logTable = {}
-if elemList[1] == 1: gen = elemList[2]
+expTable = []
+logTable = []
+if elemList[1] == _1:
+    gen = elemList[2] # XXX:need to have a generator (mult. group) 
 else: gen = elemList[1]
 x = gen
-expTable[0] = 1
+expTable.append([0,K.asInt(_1)])
+logTable.append([K.asInt(_1),0])
 for i in range(1, FieldOrder):
-    expTable[i] = x
-    logTable[x] = i
-    x = gen * x
+    _x = K.asInt(x)
+    expTable.append([i,_x])
+    logTable.append([_x,i])
+    x = K.mul(gen, x)
+
+#--------------------------------------------------
 
 info = {
      "sumTable": sumTable,
@@ -55,8 +78,8 @@ info = {
      "logTable": logTable
 }
 
-f = open("table-gf%s.pydat" % FieldOrder, "w")
-f.write(repr(info))
+f = open("table-gf%s.json" % FieldOrder, "w")
+f.write(json.dumps(info))
 f.close()
 
 #---------------------------------------------------------------------------
