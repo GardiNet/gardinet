@@ -3,7 +3,7 @@
 # Copyright 2017 Inria
 #---------------------------------------------------------------------------
 
-LIBLCDIR?=../liblc
+LIBLCDIR?=../src
 
 PYTHON=python
 
