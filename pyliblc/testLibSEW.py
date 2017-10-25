@@ -1,5 +1,5 @@
 #---------------------------------------------------------------------------
-# Unit test for LibSEW
+# Unit test for LibLC
 #---------------------------------------------------------------------------
 # Author: Cedric Adjih
 # Copyright 2013 Inria
@@ -8,7 +8,7 @@
 
 import sys, unittest, pprint, random, itertools
 
-import libsew
+import liblc
 
 #---------------------------------------------------------------------------
 

@@ -50,7 +50,6 @@ void lc_vector_set(uint8_t* data, uint16_t size, uint8_t log2_nb_bit_coef,
 uint8_t lc_vector_get(uint8_t* data, uint16_t size, uint8_t log2_nb_bit_coef,
 		      uint16_t coef_pos);
 
-
 uint16_t lc_vector_get_byte_pos_of_coef(uint8_t log2_nb_bit_coef,
 		   uint16_t coef_pos);
 

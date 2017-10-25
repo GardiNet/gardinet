@@ -18,8 +18,6 @@
 #define BEGIN_MACRO do {
 #define END_MACRO } while(0)
 
-#define DO_NOTHING BEGIN_MACRO END_MACRO
-
 /*---------------------------------------------------------------------------*/
 
 #define BITS_PER_BYTE 8
@@ -29,7 +27,6 @@
 #define BOOL_TRUE  1
 
 #define REQUIRE(...) ASSERT(__VA_ARGS__)
-#define ENSURE(...)  ASSERT(__VA_ARGS__)
 
 #define STATIC_ENSURE_EQUAL(name,a,b) \
   struct name { char l1[(a)-(b)]; char l2[(b)-(a)]; };
@@ -56,9 +53,6 @@ static inline uint16_t max_except(uint16_t v1, uint16_t v2, uint16_t ignored)
 }
 
 /*---------------------------------------------------------------------------*/
-
-typedef long int broadcast_time_t;
-#define BROADTIME_FMT "%ld"
 
 typedef uint8_t bool_t;
 

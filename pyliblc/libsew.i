@@ -6,7 +6,7 @@
 // All rights reserved. Distributed only with permission.
 //---------------------------------------------------------------------------
 
-%module libsewmodule
+%module liblcmodule
 
 %include "stdint.i"
 %include "cdata.i"
@@ -36,7 +36,6 @@
 
 STATIC_ENSURE_EQUAL(check_coef_header_size,
 		    COEF_HEADER_SIZE_SWIG, COEF_HEADER_SIZE);
-
 %}
 
 typedef uint8_t bool_t;

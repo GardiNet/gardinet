@@ -45,7 +45,7 @@ extern "C" {
 #define COEF_POS_NONE 0xffffu
 
 typedef struct {
-  uint8_t  log2_nb_bit_coef; // L /* 0,1,2,3 [-> 1,2,4,8 bits for coefficients] */
+  uint8_t  log2_nb_bit_coef; /* 0,1,2,3 [-> 1,2,4,8 bits for coefficients] */
 
   uint16_t coef_pos_min; 
   uint16_t coef_pos_max;
