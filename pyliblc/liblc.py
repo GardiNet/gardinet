@@ -8,11 +8,11 @@
 
 import struct, hashlib, pprint
 
-from libncmodule import *
+from liblcmodule import *
 
-MaxLog2NbBitCoef = 3 # 3 included
-Log2BitsPerByte = 3
-BitsPerByte = (1 << Log2BitsPerByte)
+#MaxLog2NbBitCoef = 3 # 3 included
+#Log2BitsPerByte = 3
+#BitsPerByte = (1 << Log2BitsPerByte)
 
 #---------------------------------------------------------------------------
 # Low Level Functions - untested - unused
@@ -268,13 +268,13 @@ def decode(codedPacketList):
 def allocCPacketSet(log2NbBitCoef, notifyObj = None):
     result = new_packetSet()
     if notifyObj == None:
-        packet_set_init(result, log2NbBitCoef, None, None, None)
+        packet_set_init(result, log2NbBitCoef, None, None, None, None)
     else:
         notifyObjPtr = my_inc_ref(notifyObj)
         packet_set_init(result, log2NbBitCoef, 
                         py_callback_packet_decoded,
                         py_callback_set_full,
-                        notifyObjPtr)
+                        notifyObjPtr, None)
     return result
 
 def freeCPacketSet(cPacketSet):

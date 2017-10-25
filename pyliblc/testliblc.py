@@ -6,9 +6,10 @@
 # All rights reserved. Distributed only with permission.
 #---------------------------------------------------------------------------
 
+from __future__ import print_function, division
 import sys, unittest, pprint, random, itertools
 
-import liblcmodule as liblc
+import liblc
 
 #---------------------------------------------------------------------------
 
@@ -74,7 +75,7 @@ class TestLinearCoding(unittest.TestCase):
     def checkVectorGetSet(self, l):
         """Check that setting and getting coefs impact and use the right bits"""
         bitsPerCoef = (1<<l)
-        coefPerByte = (liblc.BitsPerByte / bitsPerCoef)
+        coefPerByte = ((1<<liblc.LOG2_BITS_PER_BYTE) / bitsPerCoef)
 
         n = 256*8
         assert n % coefPerByte  == 0
@@ -102,7 +103,7 @@ class TestLinearCoding(unittest.TestCase):
 
 
     def test_checkVectorGetSet(self):
-        for l in range(liblc.MaxLog2NbBitCoef+1):
+        for l in range(liblc.MAX_LOG2_NB_BIT_COEF+1):
             self.checkVectorGetSet(l)
 
 
@@ -110,7 +111,7 @@ class TestLinearCoding(unittest.TestCase):
         """Check that the multiplication 'coef x vector' yields results that
            are consistent with individual scalar multiplication"""
         bitsPerCoef = (1<<l)
-        coefPerByte = (liblc.BitsPerByte / bitsPerCoef)
+        coefPerByte = ((1<<liblc.LOG2_BITS_PER_BYTE) / bitsPerCoef)        
 
         s = 256
         n = s*coefPerByte
@@ -134,7 +135,7 @@ class TestLinearCoding(unittest.TestCase):
             
 
     def test_checkVectorMul(self):
-        for l in range(liblc.MaxLog2NbBitCoef+1):
+        for l in range(liblc.MAX_LOG2_NB_BIT_COEF+1):
             self.checkVectorMul(l)
 
 
@@ -180,7 +181,7 @@ class TestLinearCoding(unittest.TestCase):
 class TestCodedPacket(unittest.TestCase):
     def setUp(self):
         self.P = {}
-        for l in range(liblc.MaxLog2NbBitCoef+1):
+        for l in range(liblc.MAX_LOG2_NB_BIT_COEF+1):
             nbHeaderCoef = (liblc.macro_COEF_HEADER_SIZE*8) // (1 << l)
             n = nbHeaderCoef
             self.P[l] = liblc.makeCodedPacketList(l, 4*n)
@@ -196,7 +197,7 @@ class TestCodedPacket(unittest.TestCase):
         self.assertTrue(same)
 
     def test_packetAdd(self):
-        for l in range(liblc.MaxLog2NbBitCoef+1):
+        for l in range(liblc.MAX_LOG2_NB_BIT_COEF+1):
             self.checkPacketAdd(l)
 
     def checkPacketSimilar(self, l):
@@ -207,7 +208,7 @@ class TestCodedPacket(unittest.TestCase):
                 self.assertEqual( same, i==j )
 
     def test_packetSimilar(self):
-        for l in range(liblc.MaxLog2NbBitCoef+1):
+        for l in range(liblc.MAX_LOG2_NB_BIT_COEF+1):
             self.checkPacketSimilar(l)
 
     def test_decode(self):
@@ -219,7 +220,7 @@ class TestCodedPacket(unittest.TestCase):
         for basePos, packetPos in baseToPos.iteritems():
             p = decodedList[packetPos]
             if p.content.coef_pos_min == p.content.coef_pos_max:
-                print basePos, p, repr(p.getData())
+                print(basePos, p, repr(p.getData()))
                 same = liblc.coded_packet_is_similar(
                     p.content, baseList[basePos].content)
                 self.assertTrue(same)
@@ -282,7 +283,7 @@ class TestPacketSet(unittest.TestCase):
         
 
     def test_simpleCombDecoding(self):
-        for l in range(liblc.MaxLog2NbBitCoef+1):
+        for l in range(liblc.MAX_LOG2_NB_BIT_COEF+1):
             self.checkSimpleCombDecoding(l)
 
 
@@ -306,7 +307,6 @@ class TestPacketSet(unittest.TestCase):
             self.assertTrue(decodedPacket.isSimilar(initialPacket))
             
         self.assertEqual(packetSet.stat.decoded, len(packetList))
-        #print "l", packetSet.stat.decoded
 
     def checkDecodingWithCauchyMatrixComb(self, l):
         fieldSize = (1<<(1<<l))
@@ -324,16 +324,18 @@ class TestPacketSet(unittest.TestCase):
             self.checkDecodingPacketList(packetList, initialPacketList)
 
     def test_decodingDenseComb(self):
-        for l in range(liblc.MaxLog2NbBitCoef+1):
+        for l in range(liblc.MAX_LOG2_NB_BIT_COEF+1):
             self.checkDecodingWithCauchyMatrixComb(l)
 
-TestLinearCoding = None
-TestCodedPacket = None
-#TestPacketSet = None
+#TestLinearCoding = None
+#TestCodedPacket = None
+TestPacketSet = None
 
 #---------------------------------------------------------------------------
 
 def checkTable():
+    import sys
+    sys.path.append()
     import writeGaloisFieldTable as fieldTable
     fieldTable.checkTable()
 
