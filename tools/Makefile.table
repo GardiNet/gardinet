@@ -1,0 +1,43 @@
+#---------------------------------------------------------------------------
+# Automatic generation of "c" files contains 'exp'/'log' and 'mult' tables
+# for GF(4), GF(16), GF(256)
+#
+# Author: Cedric Adjih
+#---------------------------------------------------------------------------
+# Copyright 2017 Inria
+#
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#---------------------------------------------------------------------------
+
+LOG2_256=8
+LOG2_16=4
+LOG2_4=2
+
+all-tables: \
+   table-explog-gf256.c table-explog-gf16.c table-explog-gf4.c \
+   table-mul-gf256.c table-mul-gf16.c table-mul-gf4.c
+
+table-gf%.json: computeGaloisFieldTable.py
+	python3 computeGaloisFieldTable.py $(LOG2_$*)
+
+table-explog-gf%.c table-mul-gf%.c: writeGaloisFieldTable.py table-gf%.json
+	python3 writeGaloisFieldTable.py $(LOG2_$*)
+
+#---------------------------------------------------------------------------
