@@ -1,9 +1,28 @@
 /*---------------------------------------------------------------------------
  * Sets of linear combinations of packets: management and decoding
  *---------------------------------------------------------------------------
- * Author: Cedric Adjih
- * Copyright 2013 Inria
- * All rights reserved. Distributed only with permission.
+ * Author: Cedric Adjih, Hannah Baccouch
+ *---------------------------------------------------------------------------
+ * Copyright 2013-2017 Inria
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *---------------------------------------------------------------------------*/
 
 #include <stdint.h>
@@ -140,10 +159,6 @@ uint16_t packet_set_alloc_packet_id(packet_set_t* set)
 
 uint8_t packet_set_free_first(packet_set_t* set)
 {
-  ///printf("BEFORE packet_set_free_first\n");
-  ///packet_set_pywrite(stdout, set);
-  ///printf("\n");
-
   ASSERT (!packet_set_is_empty(set));
   uint16_t pos = set->coef_pos_min;
   uint16_t packet_id = set->pos_to_id[pos % MAX_CODED_PACKET];
@@ -173,10 +188,6 @@ uint8_t packet_set_free_first(packet_set_t* set)
   set->pos_to_id[pos % MAX_CODED_PACKET] = PACKET_ID_NONE;
 
   packet_set_adjust_min_max_coef(set); /* XXX: not optimized */
-  
-  ///printf("AFTER packet_set_free_first\n");
-  ///packet_set_pywrite(stdout, set); 
-  ///printf("\n");
 
   return true;
 }
@@ -235,18 +246,9 @@ uint16_t packet_set_add(packet_set_t* set, coded_packet_t* pkt,
   reduction_stat_init(stat);
 
   /* reduce the packet */
-  ///static int counter = 0;
-  ///counter ++;
-  ///printf("&&&&&&&&&&&&& BEFORE REDUCE %d:\n", counter);
-  ///coded_packet_pywrite(stdout, pkt);
-  ///printf("\n");
   uint16_t coef_pos = packet_set_reduce(set, pkt, stat);
   if (coef_pos == COEF_POS_NONE)
     return PACKET_ID_NONE;
-  ///printf("&&&&&&&&&&&&& AFTER REDUCE %d:\n", counter);
-  ///coded_packet_pywrite(stdout, pkt);
-  ///printf("\n");
-
 
   /*check if it can be inserted as new reference for base packet at coef_pos */
   if (packet_set_is_empty(set)) {
@@ -388,8 +390,6 @@ uint16_t packet_set_get_low_index(packet_set_t* set)
 {
   uint16_t i;
   uint16_t result = COEF_POS_NONE;
-  ///printf("\nget_low_index:");
-  ///packet_set_pywrite(stdout, set);
 
   for (i=0; i<MAX_CODED_PACKET; i++)
     if (set->id_to_pos[i] != COEF_POS_NONE) {
@@ -417,8 +417,6 @@ uint16_t packet_set_get_low_index(packet_set_t* set)
     /*: XXX: note that in this case it should be = packet_set->coef_pos_max */
     result = packet_set_get_highest_decoded(set);
 
-  ///printf("\nlow_index=%d\n", result);
-
   if (result != COEF_POS_NONE) {
     /* XXX: temporary fix */
     for (i=0; i<result ;i++)
@@ -440,9 +438,6 @@ void bitmap_pywrite(FILE* out, uint8_t* bitmap, uint16_t size)
   bool_t first = true;
   fprintf(out, "[");
 
-  //for (i=0; i<size; i++)
-  //fprintf(out,"%02x", bitmap[i]);
-  
   for (i=0; i<size*BITS_PER_BYTE; i++)
     if (bitmap_get_bit(bitmap, size, i)) {
       if (first) first = false;
