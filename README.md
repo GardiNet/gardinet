@@ -1,4 +1,4 @@
-# liblc
+# liblc [liblc Home](https://gitlab.inria.fr/GardiNet/liblc/)
 
 This library implements a minimal linear coding library, with gaussian
 elimination decoding. It supports GF(2), GF(4), GF(16) and GF(256) fields.
