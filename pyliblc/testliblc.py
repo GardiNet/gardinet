@@ -8,7 +8,7 @@
 
 import sys, unittest, pprint, random, itertools
 
-import liblc
+import liblcmodule as liblc
 
 #---------------------------------------------------------------------------
 
@@ -26,8 +26,8 @@ class TestLinearCoding(unittest.TestCase):
         * x.(y.z) = (x.y).z
         """
         n = 1<<(1<<l)
-        def mul(a,b): return libsew.lc_mul(a,b,l)
-        def inv(a): return libsew.lc_inv(a,l)
+        def mul(a,b): return liblc.lc_mul(a,b,l)
+        def inv(a): return liblc.lc_inv(a,l)
         def add(a,b): return a^b
 
         # x.1 == x and x.0 == 0
@@ -68,33 +68,33 @@ class TestLinearCoding(unittest.TestCase):
 
 
     def test_checkScalarGF(self):
-        for l in range(libsew.MaxLog2NbBitCoef+1):
+        for l in range(liblc.MAX_LOG2_NB_BIT_COEF+1):
             self.checkScalarGF(l)
 
     def checkVectorGetSet(self, l):
         """Check that setting and getting coefs impact and use the right bits"""
         bitsPerCoef = (1<<l)
-        coefPerByte = (libsew.BitsPerByte / bitsPerCoef)
+        coefPerByte = (liblc.BitsPerByte / bitsPerCoef)
 
         n = 256*8
         assert n % coefPerByte  == 0
         s = n//coefPerByte
 
-        vref = libsew.u8array(s)
-        v = libsew.u8array(s)
+        vref = liblc.u8array(s)
+        v = liblc.u8array(s)
 
         for coef,fillByte in [((1<<bitsPerCoef)-1,0), (0, 0xff)]:
-            libsew.u8array_set(vref.cast(), fillByte, s)
+            liblc.u8array_set(vref.cast(), fillByte, s)
 
             for i in range(256):
-                libsew.u8array_copy(v.cast(), vref.cast(), s)
-                libsew.lc_vector_set(v.cast(), s, l,  i, coef)
-                coef_back = libsew.lc_vector_get(v.cast(), s, l,  i)
+                liblc.u8array_copy(v.cast(), vref.cast(), s)
+                liblc.lc_vector_set(v.cast(), s, l,  i, coef)
+                coef_back = liblc.lc_vector_get(v.cast(), s, l,  i)
                 self.assertEqual(coef_back, coef)
 
-                byteDiff = libsew.u8array_count_byte_diff(
+                byteDiff = liblc.u8array_count_byte_diff(
                     v.cast(), vref.cast(), s)
-                bitDiff = libsew.u8array_count_bit_diff(
+                bitDiff = liblc.u8array_count_bit_diff(
                     v.cast(), vref.cast(), s)
 
                 self.assertEqual(byteDiff, 1)
@@ -102,7 +102,7 @@ class TestLinearCoding(unittest.TestCase):
 
 
     def test_checkVectorGetSet(self):
-        for l in range(libsew.MaxLog2NbBitCoef+1):
+        for l in range(liblc.MaxLog2NbBitCoef+1):
             self.checkVectorGetSet(l)
 
 
@@ -110,23 +110,23 @@ class TestLinearCoding(unittest.TestCase):
         """Check that the multiplication 'coef x vector' yields results that
            are consistent with individual scalar multiplication"""
         bitsPerCoef = (1<<l)
-        coefPerByte = (libsew.BitsPerByte / bitsPerCoef)
+        coefPerByte = (liblc.BitsPerByte / bitsPerCoef)
 
         s = 256
         n = s*coefPerByte
 
-        vref = libsew.u8array(s)
-        v = libsew.u8array(s)
+        vref = liblc.u8array(s)
+        v = liblc.u8array(s)
 
         for i in range(256):
             vref[i] = i
 
         for coef in range(1<<bitsPerCoef):
-            libsew.lc_vector_mul(coef, vref.cast(), s, l, v.cast())
+            liblc.lc_vector_mul(coef, vref.cast(), s, l, v.cast())
             for i in range(n):
-                before = libsew.lc_vector_get(vref.cast(), s, l, i)
-                after = libsew.lc_vector_get(v.cast(), s, l, i)
-                product = libsew.lc_mul(coef, before, l)
+                before = liblc.lc_vector_get(vref.cast(), s, l, i)
+                after = liblc.lc_vector_get(v.cast(), s, l, i)
+                product = liblc.lc_mul(coef, before, l)
                 self.assertEqual(after, product)
 
         for i in range(256):
@@ -134,7 +134,7 @@ class TestLinearCoding(unittest.TestCase):
             
 
     def test_checkVectorMul(self):
-        for l in range(libsew.MaxLog2NbBitCoef+1):
+        for l in range(liblc.MaxLog2NbBitCoef+1):
             self.checkVectorMul(l)
 
 
@@ -145,22 +145,22 @@ class TestLinearCoding(unittest.TestCase):
                    + [set([7*i,9*j]) for i in range(8) for j in range(8)])
 
         size = (max([max(s) for s in setList if len(s)>0])+7)/8
-        v1 = libsew.u8array(size)
-        v2 = libsew.u8array(size)
-        w = libsew.u8array(size)
-        sw_ptr = libsew.new_u16ptr()
+        v1 = liblc.u8array(size)
+        v2 = liblc.u8array(size)
+        w = liblc.u8array(size)
+        sw_ptr = liblc.new_u16ptr()
 
         def setVector(v, valueSet):
-            libsew.u8array_set(v.cast(), 0, size)
+            liblc.u8array_set(v.cast(), 0, size)
             for i in valueSet:
-                libsew.lc_vector_set(v.cast(), size, 0,  i, 1)
+                liblc.lc_vector_set(v.cast(), size, 0,  i, 1)
             if len(valueSet) == 0: return 0
             return (max(valueSet)//8)+1
 
         def getVector(v, s):
             result = set()
             for i in range(s*8):
-                if libsew.lc_vector_get(v.cast(), size, 0,  i):
+                if liblc.lc_vector_get(v.cast(), size, 0,  i):
                     result.add(i)
             return result
 
@@ -168,9 +168,9 @@ class TestLinearCoding(unittest.TestCase):
             for set2 in setList:
                 s1 = setVector(v1, set1)
                 s2 = setVector(v2, set2)
-                libsew.lc_vector_add(v1.cast(),s1, v2.cast(),s2, 
+                liblc.lc_vector_add(v1.cast(),s1, v2.cast(),s2, 
                                     w.cast(), sw_ptr)
-                sw = libsew.u16ptr_value(sw_ptr)
+                sw = liblc.u16ptr_value(sw_ptr)
                 self.assertEqual(sw, max(s1,s2))
                 result = getVector(w, sw)
                 expectedResult = set1.symmetric_difference(set2)
@@ -180,10 +180,10 @@ class TestLinearCoding(unittest.TestCase):
 class TestCodedPacket(unittest.TestCase):
     def setUp(self):
         self.P = {}
-        for l in range(libsew.MaxLog2NbBitCoef+1):
-            nbHeaderCoef = (libsew.macro_COEF_HEADER_SIZE*8) // (1 << l)
+        for l in range(liblc.MaxLog2NbBitCoef+1):
+            nbHeaderCoef = (liblc.macro_COEF_HEADER_SIZE*8) // (1 << l)
             n = nbHeaderCoef
-            self.P[l] = libsew.makeCodedPacketList(l, 4*n)
+            self.P[l] = liblc.makeCodedPacketList(l, 4*n)
 
     def checkPacketAdd(self, l):
         P = self.P[l]
@@ -192,35 +192,35 @@ class TestCodedPacket(unittest.TestCase):
             q = P[i] + P[i+1]
             current += q
             current.adjust()
-        same = libsew.coded_packet_is_similar(current.content, P[-1].content)
+        same = liblc.coded_packet_is_similar(current.content, P[-1].content)
         self.assertTrue(same)
 
     def test_packetAdd(self):
-        for l in range(libsew.MaxLog2NbBitCoef+1):
+        for l in range(liblc.MaxLog2NbBitCoef+1):
             self.checkPacketAdd(l)
 
     def checkPacketSimilar(self, l):
         P = self.P[l]
         for i in range(len(P)):
             for j in range(len(P)):
-                same = libsew.coded_packet_is_similar(P[i].content,P[j].content)
+                same = liblc.coded_packet_is_similar(P[i].content,P[j].content)
                 self.assertEqual( same, i==j )
 
     def test_packetSimilar(self):
-        for l in range(libsew.MaxLog2NbBitCoef+1):
+        for l in range(liblc.MaxLog2NbBitCoef+1):
             self.checkPacketSimilar(l)
 
     def test_decode(self):
         baseList = self.P[3]
         window = 4
-        codedPacketList = libsew.generateLinearCombList(
+        codedPacketList = liblc.generateLinearCombList(
             baseList, 2*len(baseList), window, 1)
-        decodedList, posToBase, baseToPos = libsew.decode(codedPacketList)
+        decodedList, posToBase, baseToPos = liblc.decode(codedPacketList)
         for basePos, packetPos in baseToPos.iteritems():
             p = decodedList[packetPos]
             if p.content.coef_pos_min == p.content.coef_pos_max:
                 print basePos, p, repr(p.getData())
-                same = libsew.coded_packet_is_similar(
+                same = liblc.coded_packet_is_similar(
                     p.content, baseList[basePos].content)
                 self.assertTrue(same)
 
@@ -248,11 +248,11 @@ class TestPacketSet(unittest.TestCase):
         c1,c2,c3,c4,c5,c6,c7 = coefList
 
         for iList in itertools.permutations([0,1,2]):
-            pktList = libsew.makeCodedPacketList(l, 3)
+            pktList = liblc.makeCodedPacketList(l, 3)
             recorder = DecodingRecorder()
-            pktSet = libsew.allocCPacketSet(l, recorder)
+            pktSet = liblc.allocCPacketSet(l, recorder)
 
-            stat = libsew.new_reductionStat()
+            stat = liblc.new_reductionStat()
 
             i0,i1,i2 = iList
             pc0 = c1*pktList[i1].clone() + c2*pktList[i2].clone()
@@ -261,28 +261,28 @@ class TestPacketSet(unittest.TestCase):
                    + c7*pktList[i2].clone())
 
             for p in [pc0, pc1, pc2]:
-                packetId = libsew.packet_set_add(pktSet, p.content, stat)
-                assert packetId != libsew.macro_PACKET_ID_NONE
-                #pprint.pprint( eval(libsew.packet_set_pyrepr(pktSet)) )
+                packetId = liblc.packet_set_add(pktSet, p.content, stat)
+                assert packetId != liblc.macro_PACKET_ID_NONE
+                #pprint.pprint( eval(liblc.packet_set_pyrepr(pktSet)) )
                 #print "-" * 50
 
             assert stat.decoded == 3
             assert sorted(recorder.decodedList) == range(3)
 
             for j in range(3):
-                packetId = libsew.packet_set_get_id_of_pos(pktSet, j)
-                decoded = libsew.packet_set_get_coded_packet(pktSet, packetId)
-                #print libsew.coded_packet_pyrepr(decoded)
-                self.assertTrue( libsew.coded_packet_was_decoded(decoded) )
-                self.assertTrue( libsew.coded_packet_is_similar(
+                packetId = liblc.packet_set_get_id_of_pos(pktSet, j)
+                decoded = liblc.packet_set_get_coded_packet(pktSet, packetId)
+                #print liblc.coded_packet_pyrepr(decoded)
+                self.assertTrue( liblc.coded_packet_was_decoded(decoded) )
+                self.assertTrue( liblc.coded_packet_is_similar(
                         decoded, pktList[j].content) )
 
-            libsew.freeCPacketSet(pktSet)
-            libsew.delete_reductionStat(stat)
+            liblc.freeCPacketSet(pktSet)
+            liblc.delete_reductionStat(stat)
         
 
     def test_simpleCombDecoding(self):
-        for l in range(libsew.MaxLog2NbBitCoef+1):
+        for l in range(liblc.MaxLog2NbBitCoef+1):
             self.checkSimpleCombDecoding(l)
 
 
@@ -293,7 +293,7 @@ class TestPacketSet(unittest.TestCase):
         if len(packetList) == 0:
             return # nothing to check
         l = packetList[0].getL()
-        packetSet = libsew.PacketSet(l)
+        packetSet = liblc.PacketSet(l)
         for i,p in enumerate(packetList):
             self.assertEqual(len(packetSet), i)
             self.assertEqual(packetSet.stat.decoded, 0)
@@ -310,9 +310,9 @@ class TestPacketSet(unittest.TestCase):
 
     def checkDecodingWithCauchyMatrixComb(self, l):
         fieldSize = (1<<(1<<l))
-        maxNbCoef = 1<<libsew.log2_window_size(l)
+        maxNbCoef = 1<<liblc.log2_window_size(l)
         m = min(maxNbCoef, fieldSize//2)
-        initialPacketList = libsew.makeCodedPacketList(l, m)
+        initialPacketList = liblc.makeCodedPacketList(l, m)
         
         coefList = range(0, 2*m)
 
@@ -320,11 +320,11 @@ class TestPacketSet(unittest.TestCase):
             random.seed(seed)
             random.shuffle(coefList)
         
-            packetList = libsew.makeCauchyMatrixComb(initialPacketList, coefList)
+            packetList = liblc.makeCauchyMatrixComb(initialPacketList, coefList)
             self.checkDecodingPacketList(packetList, initialPacketList)
 
     def test_decodingDenseComb(self):
-        for l in range(libsew.MaxLog2NbBitCoef+1):
+        for l in range(liblc.MaxLog2NbBitCoef+1):
             self.checkDecodingWithCauchyMatrixComb(l)
 
 TestLinearCoding = None
