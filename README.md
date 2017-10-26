@@ -42,6 +42,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # History
 
-- Another C++ library was written by Song Yean Cho and C. Adjih starting from 2006, for the protocol DRAGONCAST (implemented in NS2 simulator). The same C++ library was also used by Farhan Mirani, Anthony Busson, C.A. for the "DONC" opportunistic NC protocol for VANETs.
+- Another prior C++ library was written by Song Yean Cho and C. Adjih starting from 2006, developped along the protocol DRAGONCAST (implemented in NS2 simulator). The same C++ library was also later used by Farhan Mirani, Anthony Busson, C.A. for the "DONC" opportunistic NC protocol for VANETs.
 
-- An evolution of DRAGONCAST for wireless sensor networks was initiated in 2013 as DragonNet/GardiNet with Hana Baccouch, Ichrak Amdouni, Antonia Masucci, C. Adjih - one of result of which is this coding library `liblc` (ran on WSN, and also NS3).
+- An evolution of DRAGONCAST for wireless sensor networks was initiated in 2013 as DragonNet/GardiNet with Ichrak Amdouni, Hana Baccouch, Antonia Masucci, C. Adjih - one of result of which is this coding library `liblc` (ran on WSN, and also NS3).
