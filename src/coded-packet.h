@@ -1,8 +1,4 @@
 /*---------------------------------------------------------------------------
- * Functions and operations on linear combination of packets
- *---------------------------------------------------------------------------
- * Author: Cedric Adjih
- *---------------------------------------------------------------------------
  * Copyright 2013-2017 Inria
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,6 +20,19 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *---------------------------------------------------------------------------*/
+
+/**
+ * @defgroup    LibLC    Linear Coding Library
+ * @ingroup     liblc
+ * @brief       linear coding and decoding of packets.
+ * @{
+ *
+ * @file
+ * @brief   Functions and operations on linear combination of packets
+ *          with sliding window header.
+ *
+ * @author  Cedric Adjih <cedric.adjih@inria.fr>
+ */
 
 #ifndef __CODED_PACKET_H__
 #define __CODED_PACKET_H__
@@ -146,3 +155,5 @@ bool coded_packet_is_similar(coded_packet_t* p1, coded_packet_t* p2);
 #endif
 
 #endif /* __CODED_PACKET_H__ */
+/*---------------------------------------------------------------------------*/
+/** @} */

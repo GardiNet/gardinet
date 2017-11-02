@@ -1,8 +1,4 @@
 /*---------------------------------------------------------------------------
- * General definitions and macros
- *---------------------------------------------------------------------------
- * Author: Cedric Adjih
- *---------------------------------------------------------------------------
  * Copyright 2013-2017 Inria
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -25,6 +21,17 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *---------------------------------------------------------------------------*/
 
+/**
+ * @ingroup     liblc
+ * @{
+ *
+ * @file
+ *
+ * @author  Cedric Adjih <cedric.adjih@inria.fr>
+ *
+ * @brief   General definitions and macros
+ */
+
 #include "general.h"
 
 /*---------------------------------------------------------------------------*/
@@ -45,3 +52,4 @@ void data_string_pywrite(FILE* out, uint8_t* data, int data_size)
 #endif /* CONF_WITH_FPRINTF */
 
 /*---------------------------------------------------------------------------*/
+/** @} */

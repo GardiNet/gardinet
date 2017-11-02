@@ -1,8 +1,4 @@
 /*---------------------------------------------------------------------------
- * Linear coding operations (GF(2), GF(4), GF(16) and GF(256))
- *---------------------------------------------------------------------------
- * Author: Cedric Adjih
- *---------------------------------------------------------------------------
  * Copyright 2013-2017 Inria
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,6 +20,17 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *---------------------------------------------------------------------------*/
+
+/**
+ * @ingroup     liblc
+ * @{
+ *
+ * @file
+ *
+ * @author  Cedric Adjih <cedric.adjih@inria.fr>
+ *
+ * @brief   Linear coding operations (GF(2), GF(4), GF(16) and GF(256))
+ */
 
 #include <string.h>
 
@@ -265,3 +272,4 @@ uint8_t lc_inv(uint8_t x, uint8_t log2_nb_bit_coef)
 }
 
 /*---------------------------------------------------------------------------*/
+/** @} */

@@ -1,8 +1,4 @@
 /*---------------------------------------------------------------------------
- * Sets of linear combinations of packets: management and decoding
- *---------------------------------------------------------------------------
- * Author: Cedric Adjih, Hannah Baccouch
- *---------------------------------------------------------------------------
  * Copyright 2013-2017 Inria
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,6 +20,19 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *---------------------------------------------------------------------------*/
+
+/**
+ * @ingroup     liblc
+ * @{
+ *
+ * @file
+ *
+ * @author  Cedric Adjih <cedric.adjih@inria.fr>
+ * @author  Hannah Baccouch <hannah.baccouch@inria.fr>
+ *
+ * @brief   Sets of linear combinations of packets: management and decoding
+ */
+
 
 #include <stdint.h>
 #include <string.h>
@@ -565,3 +574,4 @@ void reduction_stat_pywrite(FILE* out, reduction_stat_t* stat)
 #endif /* CONF_WITH_FPRINTF */
 
 /*---------------------------------------------------------------------------*/
+/** @} */

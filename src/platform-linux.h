@@ -1,8 +1,4 @@
 /*---------------------------------------------------------------------------
- * Definitions specific for compiling on Linux
- *---------------------------------------------------------------------------
- * Author: Cedric Adjih
- *---------------------------------------------------------------------------
  * Copyright 2013-2017 Inria
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,6 +20,18 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *---------------------------------------------------------------------------*/
+
+/**
+ * @defgroup    LibLC    Linear Coding Library
+ * @ingroup     liblc
+ * @brief       linear coding and decoding of packets.
+ * @{
+ *
+ * @file
+ * @brief   Definitions specific for compiling on Linux
+ *
+ * @author  Cedric Adjih <cedric.adjih@inria.fr>
+ */
 
 #ifndef __PLATFORM_LINUX_H__
 #define __PLATFORM_LINUX_H__
@@ -71,3 +79,6 @@
 /*---------------------------------------------------------------------------*/
 
 #endif /* __PLATFORM_LINUX_H__ */
+
+/*---------------------------------------------------------------------------*/
+/** @} */

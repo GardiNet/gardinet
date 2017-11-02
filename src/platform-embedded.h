@@ -1,8 +1,4 @@
 /*---------------------------------------------------------------------------
- * Definitions specific for compiling on Linux
- *---------------------------------------------------------------------------
- * Author: Cedric Adjih
- *---------------------------------------------------------------------------
  * Copyright 2013-2017 Inria
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,6 +20,17 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *---------------------------------------------------------------------------*/
+/**
+ * @defgroup    LibLC    Linear Coding Library
+ * @ingroup     liblc
+ * @brief       linear coding and decoding of packets.
+ * @{
+ *
+ * @file
+ * @brief   Definitions specific for compiling on Embbeded systems
+ *
+ * @author  Cedric Adjih <cedric.adjih@inria.fr>
+ */
 
 #ifndef __PLATFORM_EMBEDDED_H__
 #define __PLATFORM_EMBEDDED_H__
@@ -63,7 +70,6 @@
   printf("\nFATAL (" __FILE__ ":%d):\n  ", __LINE__);	\
      printf(__VA_ARGS__);			\
      printf("\n");			\
-     dint(); \
      while (1) ; \
   END_MACRO
 
@@ -75,9 +81,7 @@
 
 /*---------------------------------------------------------------------------*/
 
-/* only for MSP430 */
-#define RAND_CLOCK (TBR^TAR)
+#endif /* __PLATFORM_EMBEDDED_H__ */
 
 /*---------------------------------------------------------------------------*/
-
-#endif /* __PLATFORM_EMBEDDED_H__ */
+/** @} */

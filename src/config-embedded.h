@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------
- * Definitions specific for compiling on embedded systems (IotLab.fr)
+ * Definitions specific for compiling on embedded systems (IotLab.info)
  *---------------------------------------------------------------------------
  * Author: Cedric Adjih
  *---------------------------------------------------------------------------

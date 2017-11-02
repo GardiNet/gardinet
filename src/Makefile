@@ -23,7 +23,13 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #---------------------------------------------------------------------------
 
-CFLAGS += -Wall -g3 -fPIC
+-include Makefile.local
+
+CONFIG_FILE=config-default.h
+
+#--------------------------------------------------
+
+CFLAGS += -Wall -g3 -fPIC -DCONFIG_FILE=${CONFIG_FILE}
 
 #------------------------------
 
@@ -66,6 +72,13 @@ liblc.a: ${OBJS}
 
 test-coded-packet: test-coded-packet.o liblc.a
 	${CC} ${CFLAGS} -o $@ $< -llc -L.
+
+#---------------------------------------------------------------------------
+# Documentation
+#---------------------------------------------------------------------------
+
+doc:
+	doxygen Doxyfile
 
 #---------------------------------------------------------------------------
 # Cleaning

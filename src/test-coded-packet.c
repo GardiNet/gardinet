@@ -1,8 +1,4 @@
 /*---------------------------------------------------------------------------
- * Test linear coding of packets
- *---------------------------------------------------------------------------
- * Author: Cedric Adjih
- *---------------------------------------------------------------------------
  * Copyright 2013-2017 Inria
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,6 +20,17 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *---------------------------------------------------------------------------*/
+
+/**
+ * @ingroup     liblc
+ * @{
+ *
+ * @file
+ *
+ * @author  Cedric Adjih <cedric.adjih@inria.fr>
+ *
+ * @brief   Test linear coding of packets
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,3 +69,4 @@ int main(int argc, char** argv)
 }
 
 /*---------------------------------------------------------------------------*/
+/** @} */

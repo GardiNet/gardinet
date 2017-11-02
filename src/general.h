@@ -1,8 +1,4 @@
 /*---------------------------------------------------------------------------
- * General definitions and macros
- *---------------------------------------------------------------------------
- * Author: Cedric Adjih
- *---------------------------------------------------------------------------
  * Copyright 2013-2017 Inria
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -25,8 +21,24 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *---------------------------------------------------------------------------*/
 
+/**
+ * @defgroup    LibLC    Linear Coding Library
+ * @ingroup     liblc
+ * @brief       linear coding and decoding of packets.
+ * @{
+ *
+ * @file
+ * @brief   General definitions and macros
+ *
+ * @author  Cedric Adjih <cedric.adjih@inria.fr>
+ */
+
 #ifndef __GENERAL_H__
 #define __GENERAL_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*---------------------------------------------------------------------------*/
 
@@ -92,6 +104,10 @@ void data_string_pywrite(FILE* out, uint8_t* data, int data_size);
 #endif /* CONF_WITH_FPRINTF */
 
 /*---------------------------------------------------------------------------*/
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __GENERAL_H__ */
+/*---------------------------------------------------------------------------*/
+/** @} */
