@@ -23,10 +23,10 @@ It offers 3 levels of structures:
 
 If use this code for research, you can cite:
 - Ichrak Amdouni, Antonia Masucci, Hana Baccouch, Cedric Adjih, "DragonNet: Specification, Implementation, Experimentation and Performance Evaluation", Research Report, Inria, September 2014
-[document](https://hal.inria.fr/hal-01632790v1)
+([link](https://hal.inria.fr/hal-01632790v1))
 
 The Sliding Encoding Window (SEW) module itself was introducted in:
-- Song-Yean Cho and Cedric Adjih, "Wireless Broadcast with Network Coding: DRAGONCAST", Inria RR-6569, July 2008 [document](https://hal.archives-ouvertes.fr/inria-00292867/document)
+- Song-Yean Cho and Cedric Adjih, "Wireless Broadcast with Network Coding: DRAGONCAST", Inria RR-6569, July 2008 ([link](https://hal.archives-ouvertes.fr/inria-00292867/document))
 
 # LICENCE
 
