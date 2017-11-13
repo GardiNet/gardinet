@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------
- * Copyright 2013-2017 Inria
+ * Copyright 2017 Inria
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -28,13 +28,13 @@
  * @{
  *
  * @file
- * @brief   General definitions and macros
+ * @brief   Configuration through `#define`
  *
  * @author  Cedric Adjih <cedric.adjih@inria.fr>
  */
 
-#ifndef __GENERAL_H__
-#define __GENERAL_H__
+#ifndef __CONFIG_DEFAULT_H__
+#define __CONFIG_DEFAULT_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,72 +42,52 @@ extern "C" {
 
 /*---------------------------------------------------------------------------*/
 
-#include <stdint.h>
+/* ----- Configuration of general.h */
+
+/* Defines whether `printf` is available */
+#define CONF_WITH_FPRINTF
+
+/* ----- Configuration of linear-coding.h */
+
+/* GF(16) operations (multiplication, inversion) are available iff `WITH_GF_16`
+  is defined. 
+  In that case, internally, a multication table 16x256 (4 KiB) is included
+  and used. */
+#define WITH_GF16
+
+/* GF(256) operations (multication, inversion) are available iff WITH_GF_256
+   is defined. 
+   Depending on whether WITH_GF256_MUL_TABLE two strategies are used:
+   - if WITH_GF256_MUL_TABLE is defined, a multiplication table 256x256
+    (64 KiB) is included and used. 
+   - otherwise, a 'log' table and 'exp' table based on a generator element 
+     `g` are used (256+256 bytes). We have g ** log[x] = x (for x != 0). 
+     Then x*y = exp[log[x]+log[y]], for x !=0 and y != 0. */
+
+#define WITH_GF256
+#undef WITH_GF256_MUL_TABLE
+
+/* ----- Configuration of coded-vector.h */
+
+#undef CONF_CODED_PACKET_SIZE
+#undef CONF_LOG2_COEF_HEADER_SIZE
+
+/* ----- Configuration of packet-set.h */
+
+/* Maximum number of packets that should be hold in the packet set:
+   Assumptions: XXX */
+#undef CONF_MAX_CODED_PACKET
+
+/* Higher index ever possible to be reached 
+  (this is used to keep a bitmap of packets that have already been decoded) */
+#undef CONF_MAX_COEF_POS
 
 /*---------------------------------------------------------------------------*/
-
-#define BEGIN_MACRO do {
-#define END_MACRO } while(0)
-
-/*---------------------------------------------------------------------------*/
-
-#define BITS_PER_BYTE 8
-#define LOG2_BITS_PER_BYTE 3
-
-#define BOOL_FALSE 0
-#define BOOL_TRUE  1
-
-#define REQUIRE(...) ASSERT(__VA_ARGS__)
-
-#define STATIC_ENSURE_EQUAL(name,a,b) \
-  struct name { char l1[(a)-(b)]; char l2[(b)-(a)]; };
-
-#define MAX(a,b) ((a) > (b) ? a : b)
-#define MIN(a,b) ((a) < (b) ? a : b)
-
-static inline uint16_t min_except(uint16_t v1, uint16_t v2, uint16_t ignored)
-{
-  if (v1 == ignored) 
-    return v2;
-  if (v2 == ignored)
-    return v1;
-  return MIN(v1, v2);
-}
-
-static inline uint16_t max_except(uint16_t v1, uint16_t v2, uint16_t ignored)
-{
-  if (v1 == ignored) 
-    return v2;
-  if (v2 == ignored)
-    return v1;
-  return MAX(v1, v2);
-}
-
-/*---------------------------------------------------------------------------*/
-
-typedef uint8_t bool_t;
-
-/*---------------------------------------------------------------------------*/
-
-#ifndef EMBEDDED
-#include "platform-linux.h"
-#else /* EMBEDDED */
-#include "platform-embedded.h"
-#endif /* EMBEDDED */
-
-/*---------------------------------------------------------------------------*/
-
-#ifdef CONF_WITH_FPRINTF 
-
-void data_string_pywrite(FILE* out, uint8_t* data, int data_size);
-
-#endif /* CONF_WITH_FPRINTF */
-
-/*---------------------------------------------------------------------------*/
+  
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __GENERAL_H__ */
-/*---------------------------------------------------------------------------*/
+#endif /* __CONFIG_DEFAULT_H__ */
+
 /** @} */

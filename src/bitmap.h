@@ -1,8 +1,4 @@
 /*---------------------------------------------------------------------------
- * Bitmap functions
- *---------------------------------------------------------------------------
- * Author: Cedric Adjih, Hana Baccouch
- *---------------------------------------------------------------------------
  * Copyright 2014-2017 Inria
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -25,6 +21,19 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *---------------------------------------------------------------------------*/
 
+/**
+ * @defgroup    LibLC    Linear Coding Library
+ * @ingroup     liblc
+ * @brief       linear coding and decoding of packets.
+ * @{
+ *
+ * @file
+ * @brief   Bitmap macros/inline functions
+ *
+ * @author  Cedric Adjih <cedric.adjih@inria.fr>
+ * @author  Hannah Baccouch <hannah.baccouch@inria.fr>
+ */
+
 #ifndef __BITMAP_H__
 #define __BITMAP_H__
 
@@ -43,21 +52,24 @@ extern "C" {
 static inline void bitmap_init(uint8_t* bitmap, uint16_t byte_size)
 { memset(bitmap, 0, byte_size); }
 
-static inline void bitmap_set_bit(uint8_t* bitmap, uint16_t byte_size, uint16_t pos)
+static inline void bitmap_set_bit(uint8_t* bitmap, uint16_t byte_size,
+				  uint16_t pos)
 {
   //int byte_index = BYTE_OF_BIT(pos);
   ASSERT( BYTE_OF_BIT(pos) < byte_size );
   bitmap[BYTE_OF_BIT(pos)] |= MASK_OF_INDEX(INDEX_OF_BIT(pos));
 }
 
-static inline void bitmap_clear_bit(uint8_t* bitmap, uint16_t byte_size, uint16_t pos)
+static inline void bitmap_clear_bit(uint8_t* bitmap, uint16_t byte_size,
+				    uint16_t pos)
 {
   //int byte_index = BYTE_OF_BIT(pos);
   ASSERT( BYTE_OF_BIT(pos) < byte_size );
   bitmap[BYTE_OF_BIT(pos)] &= ~(uint8_t)MASK_OF_INDEX(INDEX_OF_BIT(pos));
 }
 
-static inline bool_t bitmap_get_bit(uint8_t* bitmap, uint16_t byte_size, uint16_t pos)
+static inline bool_t bitmap_get_bit(uint8_t* bitmap, uint16_t byte_size,
+				    uint16_t pos)
 {
   //int byte_index = BYTE_OF_BIT(pos);
   ASSERT( BYTE_OF_BIT(pos) < byte_size );
@@ -71,3 +83,5 @@ static inline bool_t bitmap_get_bit(uint8_t* bitmap, uint16_t byte_size, uint16_
 #endif
 
 #endif /* __BITMAP_H__ */
+/*---------------------------------------------------------------------------*/
+/** @} */
