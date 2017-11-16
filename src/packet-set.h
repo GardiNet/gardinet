@@ -131,7 +131,7 @@ typedef struct s_packet_set_t {
  * @brief     Initializes one packet set.
  * @param[in] set is the packet set
  * @param[in] log2_nb_bit_coef is the "log2 of the number of bits" of the finite
- *            field order to specify which of GF(2), GF(4), GF(16), GF(256) 
+ *            field order, to specify which of GF(2), GF(4), GF(16), GF(256) 
  *            is used (it would be `0,1,2,3` respectively).
  * @param[in] notify_packet_decoded_func (optional, can be NULL) is a callback 
  *            called every time a packet has been decoded if not NULL.
