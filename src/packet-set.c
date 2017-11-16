@@ -67,6 +67,7 @@ void packet_set_init(packet_set_t* set, uint8_t log2_nb_bit_coef,
   bitmap_init(set->decoded_bitmap, DECODED_BITMAP_SIZE);
 }
 
+/* XXX: duplicate with packet_set_get_id_of_pos ? */
 uint16_t packet_set_get_id_of_coef_pos(packet_set_t* set, uint16_t coef_pos)
 {
   if (set->coef_pos_min == COEF_POS_NONE) {
@@ -155,7 +156,7 @@ static uint16_t packet_set_reduce
   return COEF_POS_NONE;
 }
 
-uint16_t packet_set_alloc_packet_id(packet_set_t* set)
+static uint16_t packet_set_alloc_packet_id(packet_set_t* set)
 {
   /* find available packet set */
   uint16_t i;
@@ -227,6 +228,8 @@ uint16_t packet_set_count(packet_set_t* set, bool_t count_decoded)
   return result;
 }
 
+#if 0
+/* XXX: remove unused code */
 uint16_t packet_set_get_id_of_pos(packet_set_t* set, uint16_t coef_pos)
 {
   REQUIRE( coef_pos != COEF_POS_NONE );
@@ -238,7 +241,7 @@ uint16_t packet_set_get_id_of_pos(packet_set_t* set, uint16_t coef_pos)
 
   return set->pos_to_id[coef_pos % MAX_CODED_PACKET];
 }
-
+#endif
 
 uint16_t packet_set_add(packet_set_t* set, coded_packet_t* pkt,
 			reduction_stat_t* stat, 
@@ -380,7 +383,7 @@ uint16_t packet_set_add(packet_set_t* set, coded_packet_t* pkt,
   return packet_id;
 }
 
-uint16_t packet_set_get_highest_decoded(packet_set_t* set)
+static uint16_t packet_set_get_highest_decoded(packet_set_t* set)
 {
   uint16_t i;
   uint16_t result = COEF_POS_NONE;

@@ -28,7 +28,7 @@
  * @{
  *
  * @file
- * @brief   Configuration through `#define`
+ * @brief   Configuration through `define`
  *
  * @author  Cedric Adjih <cedric.adjih@inria.fr>
  */
