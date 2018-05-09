@@ -29,7 +29,7 @@ import distutils
 
 from distutils.core import setup, Extension
 
-LIBLCDIR = "../liblc"
+LIBLCDIR = "../src"
 
 extension = Extension("liblcmodule", ["liblcmodule.c"])
 extension.undef_macros.append("NDEBUG")
