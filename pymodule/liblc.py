@@ -208,7 +208,7 @@ def makeCauchyMatrixComb(originalPacketList, coefList):
 def floatFromHash(data):
     """return a number in [0,1[ computed from the hash of data"""
     hashInt = struct.unpack("!I", hashlib.md5(data).digest()[0:4])[0]
-    return hashInt /float (1L<<32L)
+    return hashInt /float (1<<32)
     
 def intFromHash(intBound, data):
     return int(floatFromHash(data) * intBound)
