@@ -33,13 +33,21 @@ import ExtField
 #--------------------------------------------------
 
 if len(sys.argv) < 2:
-    sys.stderr.write("Syntax: %s <log2 field order>\n" % sys.argv[0])
+    sys.stderr.write("Syntax:")
+    sys.stderr.write("for GF(2^(2^p)): %s <log2 field order>\n" % sys.argv[0])
+    sys.stderr.write("or for GF(p^q): %s <p> <q>\n" % sys.argv[0])
     sys.exit(1)
 
-LogFieldOrder = int(sys.argv[1])
-FieldOrder = 2**LogFieldOrder
+if len(sys.argv) < 3:
+    LogFieldOrder = int(sys.argv[1])
+    FieldOrder = 2**LogFieldOrder
+    K = ExtField.ExtField(2, LogFieldOrder)    
+else: 
+    p = int(sys.argv[1])
+    q = int(sys.argv[2])
+    FieldOrder = p**q
+    K = ExtField.ExtField(p,q)
 
-K = ExtField.ExtField(2, LogFieldOrder)
 elemList = [K.fromInt(i) for i in range(len(K))]
 
 toIntTable = { K.asTuple(x):i for (i,x) in enumerate(elemList) }
